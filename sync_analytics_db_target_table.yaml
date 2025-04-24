@@ -1,0 +1,16 @@
+data_sources:
+  - name: dune
+    type: dune
+    key: ${DUNE_API_KEY}
+  - name: analytics_db
+    type: postgres
+    key: ${ANALYTICS_DB_URL}
+
+jobs:
+  - name: sync_${TARGET_TABLE_NAME}
+    source:
+      ref: analytics_db
+      query_string: "SELECT * FROM ${TARGET_TABLE_NAME}"
+    destination:
+      ref: dune
+      table_name: ${TARGET_TABLE_NAME}
