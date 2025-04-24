@@ -14,3 +14,4 @@ jobs:
     destination:
       ref: dune
       table_name: ${TARGET_TABLE_NAME}
+      request_timeout: 300
