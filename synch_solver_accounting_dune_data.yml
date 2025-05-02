@@ -157,7 +157,7 @@ jobs:
 
   - name: d2p-converstion-rate-accounting-period
     source:
-      ref: Dune
+      ref: dune
       query_id: 4545357
       query_engine: medium
       poll_frequency: 5
