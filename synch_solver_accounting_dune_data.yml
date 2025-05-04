@@ -100,12 +100,6 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt_local_test.dune_data__raw_slippage
-      if_exists: upsert
-      index_columns:
-        - tx_hash
-        - token_address
-        - slippage_type
-        - price_atom
 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_batches
     source:
