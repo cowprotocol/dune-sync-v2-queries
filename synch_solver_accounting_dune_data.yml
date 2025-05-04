@@ -7,7 +7,6 @@ data_sources:
     key: ${ANALYTICS_DB_URL}
 
 jobs:
-#this table is small (195 rows) so it's ok to requery it but it could be partitioned by evt_block_number or evt_block_time for automation
   - name: d2p-cow_protocol_${BLOCKCHAIN}_vouches
     source:
       ref: dune
@@ -21,9 +20,11 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_vouches
-      if_exists: replace
+      if_exists: upsert
+      index_columns:
+        - evt_tx_hash
+        - evt_index
 
-#this table is small (138 rows) so it's ok to requery it but it could be partitioned by evt_block_number or evt_block_time for automation
   - name: d2p-cow_protocol_${BLOCKCHAIN}_invalidated_vouches
     source:
       ref: dune
@@ -37,9 +38,11 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_invalidated_vouches 
-      if_exists: replace 
+      if_exists: upsert
+      index_columns:
+        - evt_tx_hash
+        - evt_index
 
-#this table is small (202 rows) so it's ok to requery it 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_solvers
     source:
       ref: dune
@@ -53,10 +56,14 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_solvers
-      if_exists: replace
+      if_exists: upsert
+      index_columns:
+        - active
+        - address
+        - environment
+        - name
 
 #hard coded data, not big
-#manually dropped and CASCADE de table before redoing a synch: how to handle this automatically?
 #todo check with felix how to parameterise this query per chain
   - name: d2p-cow_protocol_ethereum_excluded_batches
     source:
@@ -67,9 +74,10 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__cow_protocol_ethereum_excluded_batches
-      if_exists: replace
+      if_exists: upsert
+      index_columns:
+        - tx_hash
 
-  # for automation, this and all tables should specify exactly which columns to synch because some changes in source data happen
   - name: d2p-raw_slippage
     source:
       ref: dune
@@ -78,7 +86,7 @@ jobs:
       poll_frequency: 5
       parameters:
         - name: start_time
-          value: ${ACCOUNTING_PERIOD_START_TIME} # data should look like this: ${ACCOUNTING_PERIOD_START_TIME}
+          value: ${ACCOUNTING_PERIOD_START_TIME} 
           type: DATE
         - name: end_time
           value: ${ACCOUNTING_PERIOD_END_TIME}
@@ -86,14 +94,18 @@ jobs:
         - name: blockchain
           value: ${BLOCKCHAIN}
           type: ENUM
-        - name: raw_slippage_table_name
+        - name: raw_slippage_table_name #todo: check with felix if this table is called differently for other chains
           value: raw_slippage_breakdown
           type: ENUM
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__raw_slippage
+      if_exists: upsert
+      index_columns:
+        - tx_hash
+        - token_address
+        - slippage_type
 
-  #automation: partition by start and end time 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_batches
     source:
       ref: dune
@@ -110,9 +122,10 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_batches
-      if_exists: replace
+      if_exists: upsert
+      index_columns:
+        - tx_hash
 
-  #automation: partition by start and end time
   - name: d2p-service_fee_tracker
     source:
       ref: dune
@@ -132,9 +145,12 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__service_fee_tracker
-      if_exists: replace
+      if_exists: upsert
+      index_columns:
+        - solver
+        - start_time
+        - end_time
 
-  #automation: partition by start and end time
   - name: d2p-block-timestamp
     source:
       ref: dune
@@ -154,6 +170,9 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__block_timestamp
+      if_exists: upsert
+      index_columns:
+        - block_number
 
   - name: d2p-converstion-rate-accounting-period
     source:
@@ -171,3 +190,8 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt.dune_data__converstion_rate_per_accounting_period
+      if_exists: upsert
+      index_columns:
+        - conversion_rate_cow_to_native
+        - end_time
+        - start_time
