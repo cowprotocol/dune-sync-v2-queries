@@ -105,7 +105,7 @@ jobs:
         - tx_hash
         - token_address
         - slippage_type
-        - slippage_wei
+        - price_atom
 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_batches
     source:
