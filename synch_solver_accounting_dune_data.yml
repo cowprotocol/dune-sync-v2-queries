@@ -81,7 +81,7 @@ jobs:
   - name: d2p-raw_slippage
     source:
       ref: dune
-      query_id: 4059683 
+      query_id: 5080198  #todo check with felix if this query makes sense 
       query_engine: medium
       poll_frequency: 5
       parameters:
@@ -100,6 +100,16 @@ jobs:
     destination:
       ref: analytics_db
       table_name: dbt_local_test.dune_data__raw_slippage
+      if_exists: upsert
+      index_columns:
+        - tx_hash
+        - token_address 
+        - slippage_type 
+        - slippage_atoms
+        - slippage_usd
+        - price_unit
+        - price_atom
+        - block_time
 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_batches
     source:
