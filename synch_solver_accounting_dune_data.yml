@@ -19,7 +19,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__cow_protocol_${BLOCKCHAIN}_vouches
+      table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_vouches
       if_exists: upsert
       index_columns:
         - evt_tx_hash
@@ -37,7 +37,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__cow_protocol_${BLOCKCHAIN}_invalidated_vouches 
+      table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_invalidated_vouches 
       if_exists: upsert
       index_columns:
         - evt_tx_hash
@@ -55,7 +55,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__cow_protocol_${BLOCKCHAIN}_solvers
+      table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_solvers
       if_exists: upsert
       index_columns:
         - active
@@ -73,7 +73,7 @@ jobs:
       poll_frequency: 5
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__cow_protocol_ethereum_excluded_batches
+      table_name: dbt.dune_data__cow_protocol_ethereum_excluded_batches
       if_exists: upsert
       index_columns:
         - tx_hash
@@ -99,7 +99,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__raw_slippage
+      table_name: dbt.dune_data__raw_slippage
       if_exists: upsert
       index_columns:
         - tx_hash
@@ -126,7 +126,7 @@ jobs:
           type: DATE
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__cow_protocol_${BLOCKCHAIN}_batches
+      table_name: dbt.dune_data__cow_protocol_${BLOCKCHAIN}_batches
       if_exists: upsert
       index_columns:
         - tx_hash
@@ -149,7 +149,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__service_fee_tracker
+      table_name: dbt.dune_data__service_fee_tracker
       if_exists: upsert
       index_columns:
         - solver
@@ -174,7 +174,7 @@ jobs:
           type: ENUM
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__block_timestamp
+      table_name: dbt.dune_data__block_timestamp
       if_exists: upsert
       index_columns:
         - block_number
@@ -194,7 +194,7 @@ jobs:
           type: DATE
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__conversion_rate_per_accounting_period
+      table_name: dbt.dune_data__conversion_rate_per_accounting_period
       if_exists: upsert
       index_columns:
         - conversion_rate_cow_to_native
