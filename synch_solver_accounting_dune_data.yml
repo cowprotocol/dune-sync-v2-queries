@@ -105,6 +105,7 @@ jobs:
         - tx_hash
         - token_address
         - slippage_type
+        - slippage_wei
 
   - name: d2p-cow_protocol_${BLOCKCHAIN}_batches
     source:
@@ -174,7 +175,7 @@ jobs:
       index_columns:
         - block_number
 
-  - name: d2p-converstion-rate-accounting-period
+  - name: d2p-conversion-rate-accounting-period
     source:
       ref: dune
       query_id: 4545357
@@ -189,7 +190,7 @@ jobs:
           type: DATE
     destination:
       ref: analytics_db
-      table_name: dbt_local_test.dune_data__converstion_rate_per_accounting_period
+      table_name: dbt_local_test.dune_data__conversion_rate_per_accounting_period
       if_exists: upsert
       index_columns:
         - conversion_rate_cow_to_native
